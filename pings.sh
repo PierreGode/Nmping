@@ -1,7 +1,7 @@
 #!/bin/bash
 ########################### Start ################################
 #                                                                #
-#   Start pings google and the sent to servers och to loop       #
+#   Start ping to google and then send to servers or to loop       #
 #                                                                #
 ##################################################################
 start(){
