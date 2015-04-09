@@ -34,7 +34,6 @@ pico2wave -w logs/ping.wav "Hello technical operations., I have connection troub
 loop
   fi
 }
-
 ############################# loop ###############################
 #                                                                #
 #               Loop loops pings google till success             #
