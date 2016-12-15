@@ -9,7 +9,7 @@ read IPlisT
 date
 cat $IPlisT | while read output
 do
-    ping "$output" > /dev/null
+    ping -c 4 "$output" > /dev/null
     if [ $? -eq 0 ]; then
     echo "$output is up" 
     else
