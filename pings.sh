@@ -1,17 +1,13 @@
 #!/bin/bash
 ########################### Start ################################
 #                                                                #
-#     create ip.lst and add a list of ip adresses to check       #
+#                                                                #
 #                                                                #
 ##################################################################
 
-cat ip.lst | while read output
-do
-    ping -c 1 "$output" > /dev/null
-    if [ $? -eq 0 ]; then
-    echo "$output is up" 
-    else
-    echo "$output is down"
-    fi
-done
+echo "${MENU}"Checking network"${END}"
+ifconfig | awk '{print $2}' | grep addr | head -1
+speed=$( ping -q -w 1 -c 1 `ip r | grep default | cut -d ' ' -f 3` | grep max | awk '{print$4}' | cut -d '/' -f1)
+echo "$speed ms"
+ping -q -w 1 -c 1 `ip r | grep default | cut -d ' ' -f 3` > /dev/null && echo "Network is working" || echo "NO Network"
 
