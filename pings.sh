@@ -1,10 +1,10 @@
 #!/bin/bash
-########################### Start ################################
+########################### Pings ################################
 #       Author: Pierre Goude                                     #
 #                                                                #
 # Not finished script, its working but it is really just a       #
-# dumb thing. unless you want to create a service to log,         #
-# to monitor responsetimes.                              #
+# dumb thing. unless you want to create a service to log,        #
+# to monitor responsetimes.                                      #
 # then just remove the #,s below and run it with cron or service #
 ##################################################################
 
