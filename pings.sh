@@ -18,4 +18,5 @@ echo your IP is $yourip # $dates | sudo tee -a /var/log/networkping.log
 echo "$speed ms" # $dates | sudo tee -a /var/log/networkping.log
 #echo "___________________________________" | sudo tee -a /var/log/networkping.log
 ping -q -w 1 -c 1 `ip r | grep default | cut -d ' ' -f 3` > /dev/null && echo "Network is working" || echo "NO Network"
+#sleep 1
 #done
