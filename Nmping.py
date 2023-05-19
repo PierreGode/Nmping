@@ -8,7 +8,6 @@ import ipaddress
 import platform
 import re
 
-
 class App:
     def __init__(self):
         self.window = tk.Tk()
@@ -168,7 +167,6 @@ class App:
                     "  - IP range: e.g., 192.168.1.100-150 or 2001:db8::1-10\n" \
                     "  - Subnet: e.g., 192.168.1.0/24 or 2001:db8::/32"
         messagebox.showinfo("NmPing - Usage", info_text)
-
 
 if __name__ == "__main__":
     App()
