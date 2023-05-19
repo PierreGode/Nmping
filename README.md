@@ -1,7 +1,7 @@
 Nmping is a simple ping tool that also shows open ports for each target.<p>
 
 Requirements:
-Python installed on your system.
+Python installed on your system.<p>
 Install the required libraries:
 ```
 pip install tkinter
