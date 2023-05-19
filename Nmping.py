@@ -4,7 +4,7 @@ from tkinter import messagebox
 from subprocess import run, PIPE
 from concurrent.futures import ThreadPoolExecutor
 import queue
-from ipaddress import ip_network, ip_address
+import ipaddress
 import platform
 import re
 
@@ -97,13 +97,31 @@ class App:
     def parse_ip_input(self, ip_input):
         if "-" in ip_input:
             start_ip, end_ip = ip_input.split("-")
-            start_parts = start_ip.split(".")
-            end_parts = end_ip if "." in end_ip else start_parts[:-1] + [end_ip]
-            return [str(ip_address(f"{start_parts[0]}.{start_parts[1]}.{start_parts[2]}.{i}")) for i in range(int(start_parts[3]), int(end_parts[3]) + 1)]
+            try:
+                ipaddress.ip_address(start_ip)
+                if '.' in end_ip or ':' in end_ip:
+                    ipaddress.ip_address(end_ip)
+            except ValueError:
+                raise ValueError("Invalid IP address in range.")
+            if '.' in start_ip:  # IPv4
+                start_parts = start_ip.split(".")
+                end_parts = end_ip if "." in end_ip else start_parts[:-1] + [end_ip]
+                return [str(ipaddress.ip_address(f"{start_parts[0]}.{start_parts[1]}.{start_parts[2]}.{i}")) for i in range(int(start_parts[3]), int(end_parts[3]) + 1)]
+            else:  # IPv6
+                start_parts = start_ip.split(":")
+                end_parts = end_ip if ":" in end_ip else start_parts[:-1] + [end_ip]
+                # The range for IPv6 could be very large, so you might want to limit the range or improve this logic
+                return [str(ipaddress.ip_address(f"{':'.join(start_parts[:-1])}:{i}")) for i in range(int(start_parts[-1], 16), int(end_parts[-1], 16) + 1)]
         elif "/" in ip_input:
-            return [str(ip) for ip in ip_network(ip_input)]
+            try:
+                return [str(ip) for ip in ipaddress.ip_network(ip_input)]
+            except ValueError:
+                raise ValueError("Invalid IP network.")
         else:
-            return [ip_input]
+            try:
+                return [str(ipaddress.ip_address(ip_input))]
+            except ValueError:
+                raise ValueError("Invalid IP address.")
 
     def ping_ip(self, ip):
         ping_cmd = self.get_ping_cmd(ip)
@@ -146,9 +164,9 @@ class App:
                     "4. Use the Stop button to stop the pinging process.\n\n" \
                     "Note:\n" \
                     "- IP range can be specified in the following formats:\n" \
-                    "  - Single IP: e.g., 192.168.1.100\n" \
-                    "  - IP range: e.g., 192.168.1.100-150\n" \
-                    "  - Subnet: e.g., 192.168.1.0/24"
+                    "  - Single IP: e.g., 192.168.1.100 or 2001:db8::1\n" \
+                    "  - IP range: e.g., 192.168.1.100-150 or 2001:db8::1-10\n" \
+                    "  - Subnet: e.g., 192.168.1.0/24 or 2001:db8::/32"
         messagebox.showinfo("NmPing - Usage", info_text)
 
 
