@@ -17,13 +17,17 @@ clone this repository:<p>
 git clone https://github.com/PierreGode/Nmping.git
 ```
 
-install nmap on your system.<p>
+Install nmap on your system.<p>
 
 Open a terminal or command prompt.
 Navigate to the file's directory.
 Run:
+```
 cd Nmping
+```
+```
 python nmping.py
+```
 <p>
 Using the Application:
 Enter the IP address or range in the "IP Range" field.
