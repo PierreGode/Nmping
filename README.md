@@ -1,10 +1,12 @@
+Nmping is a simple ping tool that also shows open ports for each target.<p>
+
 Requirements:
 Python installed on your system.
 Install the required libraries:
 ```
 pip install tkinter
 ```
-Running the Application:
+Running the Application:<p>
 Save the code in a Python file (e.g., nmping.py).
 Open a terminal or command prompt.
 Navigate to the file's directory.
