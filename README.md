@@ -6,8 +6,13 @@ Install the required libraries:
 ```
 pip install tkinter
 ```
-Running the Application:<p>
-Save the code in a Python file (e.g., nmping.py).
+clone this repository:<p>
+
+```
+git clone https://github.com/PierreGode/Nmping.git
+```
+
+
 Open a terminal or command prompt.
 Navigate to the file's directory.
 Run:
