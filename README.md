@@ -12,6 +12,7 @@ Run:
 ```
 python nmping.py
 ```
+install nmap on your system
 Using the Application:
 Enter the IP address or range in the "IP Range" field.
 Click "Ping" to start pinging.
