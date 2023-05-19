@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 from subprocess import run, PIPE
 from concurrent.futures import ThreadPoolExecutor
 import queue
@@ -11,7 +12,7 @@ import re
 class App:
     def __init__(self):
         self.window = tk.Tk()
-        self.window.title("Ping and Nmap Tool")
+        self.window.title("NmPing")
 
         self.ip_range_label = tk.Label(self.window, text="IP Range:")
         self.ip_range_label.grid(row=0, column=0, padx=5, pady=5, sticky='w')
@@ -25,6 +26,9 @@ class App:
         self.stop_button = tk.Button(self.window, text="Stop", command=self.stop_pinging, state=tk.DISABLED)
         self.stop_button.grid(row=0, column=3, padx=5, pady=5, sticky='e')
 
+        self.info_button = tk.Button(self.window, text="Info", command=self.show_info)
+        self.info_button.grid(row=0, column=4, padx=5, pady=5, sticky='e')
+
         self.treeview = ttk.Treeview(self.window)
         self.treeview["columns"] = ("status", "ports")
         self.treeview.heading("#0", text="IP Address", command=lambda: self.sort_column("#0", False))
@@ -33,7 +37,7 @@ class App:
         self.treeview.column("status", width=100)
         self.treeview.heading("ports", text="Open Ports")
         self.treeview.column("ports", width=300)
-        self.treeview.grid(row=1, column=0, columnspan=4, padx=5, pady=5, sticky='nsew')
+        self.treeview.grid(row=1, column=0, columnspan=5, padx=5, pady=5, sticky='nsew')
 
         self.window.grid_rowconfigure(1, weight=1)
         self.window.grid_columnconfigure(1, weight=1)
@@ -63,13 +67,13 @@ class App:
         ip_input = self.ip_range_entry.get().strip()
 
         if not ip_input:
-            tk.messagebox.showwarning("Validation Error", "Please enter an IP address or range.")
+            messagebox.showwarning("Validation Error", "Please enter an IP address or range.")
             return
 
         try:
             ip_list = self.parse_ip_input(ip_input)
         except ValueError as e:
-            tk.messagebox.showwarning("Validation Error", str(e))
+            messagebox.showwarning("Validation Error", str(e))
             return
 
         for child in self.treeview.get_children():
@@ -131,6 +135,21 @@ class App:
     def get_ping_cmd(ip):
         current_platform = platform.system().lower()
         return ["ping", "-c", "1", ip] if current_platform != "windows" else ["ping", "-n", "1", ip]
+
+    def show_info(self):
+        info_text = "NmPing\n\n" \
+                    "A tool for pinging and port scanning multiple IP addresses.\n\n" \
+                    "Usage:\n" \
+                    "1. Enter an IP address or range in the IP Range field.\n" \
+                    "2. Click on the Ping button to start pinging.\n" \
+                    "3. The tool will display the status and open ports for each IP address.\n" \
+                    "4. Use the Stop button to stop the pinging process.\n\n" \
+                    "Note:\n" \
+                    "- IP range can be specified in the following formats:\n" \
+                    "  - Single IP: e.g., 192.168.1.100\n" \
+                    "  - IP range: e.g., 192.168.1.100-150\n" \
+                    "  - Subnet: e.g., 192.168.1.0/24"
+        messagebox.showinfo("NmPing - Usage", info_text)
 
 
 if __name__ == "__main__":
