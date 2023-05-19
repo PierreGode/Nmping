@@ -6,20 +6,25 @@ Install the required libraries:
 ```
 pip install tkinter
 ```
+and
+```
+python nmping.py
+```
+
 clone this repository:<p>
 
 ```
 git clone https://github.com/PierreGode/Nmping.git
 ```
 
+install nmap on your system.<p>
 
 Open a terminal or command prompt.
 Navigate to the file's directory.
 Run:
-```
+cd Nmping
 python nmping.py
-```
-install nmap on your system.<p>
+<p>
 Using the Application:
 Enter the IP address or range in the "IP Range" field.
 Click "Ping" to start pinging.
