@@ -80,7 +80,10 @@ class App:
 
         self.executor = ThreadPoolExecutor(max_workers=50)
         for ip in ip_list:
-            self.executor.submit(self.ping_ip, ip)
+            if '*' in ip:
+                self.executor.submit(self.ping_ips_with_wildcard, ip)
+            else:
+                self.executor.submit(self.ping_ip, ip)
 
     def stop_pinging(self):
         if self.executor:
@@ -133,12 +136,17 @@ class App:
 
         self.result_queue.put((ip, hostname, status, open_ports_str))
 
-    @staticmethod
-    def get_ping_cmd(ip):
+    def get_ping_cmd(self, ip):
         if platform.system().lower() == "windows":
             return ["ping", "-n", "1", "-w", "1000", ip]
         else:
             return ["ping", "-c", "1", "-W", "1", ip]
+
+    def ping_ips_with_wildcard(self, ip):
+        ip_parts = ip.split('*')
+        for i in range(10):
+            new_ip = ip_parts[0] + str(i) + ip_parts[1]
+            self.ping_ip(new_ip)
 
     def show_info(self):
         messagebox.showinfo("Info", "This tool pings a range of IPs, performs an NSLOOKUP, and lists any open ports.")
