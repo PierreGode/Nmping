@@ -143,11 +143,13 @@ class App:
             return ["ping", "-c", "1", "-W", "1", ip]
 
     def ping_ips_with_wildcard(self, ip):
-        ip_parts = ip.split('*')
-        for i in range(10):
-            for j in range(10):
-                new_ip = ip_parts[0] + str(i) + str(j) + ip_parts[1]
-                self.ping_ip(new_ip)
+        num_stars = ip.count('*')
+        min_val = 0
+        max_val = 10 ** num_stars
+
+        for i in range(min_val, max_val):
+            new_ip = ip.replace('*' * num_stars, str(i).zfill(num_stars))
+            self.ping_ip(new_ip)
 
     def show_info(self):
         messagebox.showinfo("Info", "This tool pings a range of IPs, performs an NSLOOKUP, and lists any open ports.")
