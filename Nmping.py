@@ -1,12 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from subprocess import run, PIPE
+from subprocess import run, PIPE, Popen
 from concurrent.futures import ThreadPoolExecutor
 import queue
 import ipaddress
 import platform
 import re
+import os
+import signal
 
 class App:
     def __init__(self):
@@ -46,6 +48,7 @@ class App:
         self.result_queue = queue.Queue()
         self.window.after(100, self.check_queue)
         self.executor = None
+        self.ping_processes = []
 
         self.window.mainloop()
 
@@ -93,6 +96,9 @@ class App:
         self.ping_button.configure(state=tk.NORMAL)
         self.stop_button.configure(state=tk.DISABLED)
 
+        for process in self.ping_processes:
+            process.terminate()
+
     def parse_ip_input(self, ip_input):
         if "-" in ip_input:
             ip_range = ip_input.split("-")
@@ -112,13 +118,17 @@ class App:
                 break
 
         ping_cmd = self.get_ping_cmd(ip)
-        ping_process = run(ping_cmd, capture_output=True, text=True, timeout=5)
+        ping_process = Popen(ping_cmd, stdout=PIPE, stderr=PIPE, shell=platform.system().lower() == "windows")
+        self.ping_processes.append(ping_process)
 
-        if "Destination host unreachable" in ping_process.stdout:
+        stdout, _ = ping_process.communicate()
+        stdout = stdout.decode() if stdout else ""
+
+        if "Destination host unreachable" in stdout:
             self.result_queue.put((ip, hostname, "Down", "N/A"))
             return
 
-        is_alive = "1 packets received" in ping_process.stdout or "Received = 1" in ping_process.stdout
+        is_alive = "1 packets received" in stdout or "Received = 1" in stdout
         if is_alive:
             nmap_cmd = ["nmap", "-p", "1-1000", ip]
             nmap_process = run(nmap_cmd, capture_output=True, text=True, timeout=10)
