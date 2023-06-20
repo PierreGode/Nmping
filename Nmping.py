@@ -145,8 +145,9 @@ class App:
     def ping_ips_with_wildcard(self, ip):
         ip_parts = ip.split('*')
         for i in range(10):
-            new_ip = ip_parts[0] + str(i) + ip_parts[1]
-            self.ping_ip(new_ip)
+            for j in range(10):
+                new_ip = ip_parts[0] + str(i) + str(j) + ip_parts[1]
+                self.ping_ip(new_ip)
 
     def show_info(self):
         messagebox.showinfo("Info", "This tool pings a range of IPs, performs an NSLOOKUP, and lists any open ports.")
